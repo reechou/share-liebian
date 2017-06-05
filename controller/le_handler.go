@@ -134,7 +134,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		json.NewEncoder(w).Encode(token)
 	default:
-		http.ServeFile(w, r, rr.Path)
+		http.ServeFile(w, r, self.l.cfg.LefitOauth.MpVerifyDir + rr.Path)
 	}
 }
 

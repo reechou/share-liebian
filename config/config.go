@@ -35,6 +35,7 @@ type LefitOauth struct {
 	LefitWxAppSecret       string
 	LefitOauth2RedirectURI string
 	LefitOauth2Scope       string
+	MpVerifyDir            string
 }
 
 type Config struct {
