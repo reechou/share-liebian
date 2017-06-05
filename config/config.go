@@ -38,6 +38,10 @@ type LefitOauth struct {
 	MpVerifyDir            string
 }
 
+type LiebianSrv struct {
+	Host string
+}
+
 type Config struct {
 	Debug     bool
 	Path      string
@@ -53,6 +57,8 @@ type Config struct {
 	Tuling
 	
 	LefitOauth
+	
+	LiebianSrv
 }
 
 func NewConfig() *Config {

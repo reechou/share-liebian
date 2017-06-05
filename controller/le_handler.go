@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"strings"
 	"html/template"
+	"strconv"
 
 	"github.com/chanxuehong/rand"
 	"github.com/chanxuehong/session"
@@ -17,6 +18,7 @@ import (
 	"github.com/chanxuehong/wechat.v2/oauth2"
 	"github.com/reechou/holmes"
 	"github.com/reechou/share-liebian/proto"
+	"github.com/reechou/share-liebian/ext"
 )
 
 const (
@@ -117,14 +119,29 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		holmes.Debug("token: %+v", token)
 		//json.NewEncoder(w).Encode(token)
+		lbType, err := strconv.Atoi(params[1])
+		if err != nil {
+			holmes.Error("strconv param[%s] error: %v", params[1], err)
+			return
+		}
+		liebianReq := &ext.GetQRCodeUrlReq{
+			AppId: self.l.cfg.LefitOauth.LefitWxAppId,
+			OpenId: token.OpenId,
+			Type: int64(lbType),
+		}
+		imgUrl, err := self.l.LiebianExt.GetLiebianQrCodeUrl(liebianReq)
+		if err != nil {
+			holmes.Error("get lieban qrcode url error: %v", err)
+			return
+		}
 		t, err := template.ParseFiles("./views/share.html")
 		if err != nil {
 			holmes.Error("parse file error: %v", err)
 			return
 		}
 		shareData := &ShareTpl{
-			Title: "长按扫描二维码",
-			Img:   "http://oe3slowqt.bkt.clouddn.com/FkiQr_9vRzhxXbK7r-IiUjT6tNbB",
+			Title: "长按二维码加入",
+			Img:   imgUrl,
 		}
 		err = t.Execute(w, shareData)
 		if err != nil {
