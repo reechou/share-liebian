@@ -44,6 +44,7 @@ type LeHandler struct {
 	
 	lefitSessionStorage *session.Storage
 	lefitOauth2Endpoint oauth2.Endpoint
+	oauth2Client *oauth2.Client
 }
 
 func NewLeHandler(l *Logic) *LeHandler {
@@ -51,6 +52,9 @@ func NewLeHandler(l *Logic) *LeHandler {
 	
 	lh.lefitSessionStorage = session.New(20*60, 60*60)
 	lh.lefitOauth2Endpoint = mpoauth2.NewEndpoint(lh.l.cfg.LefitOauth.LefitWxAppId, lh.l.cfg.LefitOauth.LefitWxAppSecret)
+	lh.oauth2Client = &oauth2.Client{
+		Endpoint: lh.lefitOauth2Endpoint,
+	}
 	
 	return lh
 }
@@ -105,12 +109,9 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		
 		holmes.Debug("code: %s", code)
 
-		oauth2Client := oauth2.Client{
-			Endpoint: self.lefitOauth2Endpoint,
-		}
-		token, err := oauth2Client.ExchangeToken(code)
+		token, err := self.oauth2Client.ExchangeToken(code)
 		if err != nil {
-			io.WriteString(w, err.Error())
+			io.WriteString(w, "请重新扫描!")
 			holmes.Error("exchange token error: %v", err)
 			return
 		}
