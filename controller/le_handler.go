@@ -56,6 +56,8 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeRsp(w, &proto.Response{Code: proto.RESPONSE_ERR})
 		return
 	}
+	
+	holmes.Debug("rr: %v", rr)
 
 	switch rr.Path {
 	case SHARE_URI_RECEIVE:
@@ -95,7 +97,6 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		savedState := session.(string) // 一般是要序列化的, 这里保存在内存所以可以这么做
-
 		queryValues, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
 			io.WriteString(w, err.Error())
