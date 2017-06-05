@@ -57,9 +57,10 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
+	holmes.Debug("rr: %v path[%s]", rr, rr.Path)
 	if rr.Path == "" {
 		holmes.Debug("in balance heartbeat")
-		return 
+		return
 	}
 	
 	params := strings.Split(rr.Path, "/")
