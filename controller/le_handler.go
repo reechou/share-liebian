@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/chanxuehong/rand"
 	"github.com/chanxuehong/session"
@@ -58,8 +59,14 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	holmes.Debug("rr: %v", rr)
+	
+	params := strings.Split(rr.Path, "/")
+	if len(params) != 2 {
+		holmes.Error("params[%s] error", rr.Path)
+		return
+	}
 
-	switch rr.Path {
+	switch params[0] {
 	case SHARE_URI_RECEIVE:
 		sid := sid.New()
 		state := string(rand.NewHex())
@@ -77,7 +84,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		http.SetCookie(w, &cookie)
 
-		AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId, self.l.cfg.LefitOauth.LefitOauth2RedirectURI, self.l.cfg.LefitOauth.LefitOauth2Scope, state)
+		AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId, fmt.Sprintf("%s/%s", self.l.cfg.LefitOauth.LefitOauth2RedirectURI, params[1]), self.l.cfg.LefitOauth.LefitOauth2Scope, state)
 		holmes.Debug("auth code url: %s", AuthCodeURL)
 
 		http.Redirect(w, r, AuthCodeURL, http.StatusFound)
