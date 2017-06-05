@@ -108,8 +108,6 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			holmes.Error("用户禁止授权")
 			return
 		}
-		
-		holmes.Debug("code: %s", code)
 
 		token, err := self.oauth2Client.ExchangeToken(code)
 		if err != nil {
@@ -132,6 +130,11 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		imgUrl, err := self.l.LiebianExt.GetLiebianQrCodeUrl(liebianReq)
 		if err != nil {
 			holmes.Error("get lieban qrcode url error: %v", err)
+			io.WriteString(w, "暂无二维码可扫!")
+			return
+		}
+		if imgUrl == "" {
+			io.WriteString(w, "暂无二维码可扫!")
 			return
 		}
 		t, err := template.ParseFiles("./views/share.html")
