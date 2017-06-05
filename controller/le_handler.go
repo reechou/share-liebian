@@ -75,6 +75,8 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			holmes.Error("session write error: %v", err)
 			return
 		}
+		
+		holmes.Debug("sid: %s", sid)
 
 		cookie := http.Cookie{
 			Name:     "sid",
@@ -94,6 +96,8 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			holmes.Error("get cookie error: %v", err)
 			return
 		}
+		
+		holmes.Debug("cookie: %s", cookie.Value)
 
 		session, err := self.lefitSessionStorage.Get(cookie.Value)
 		if err != nil {
