@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>{{ .Title }}</title>
+    <style type="text/css">
+        *{ padding:0; margin:0 }
+        img{ width: 100%; display: block }
+	</style>
+    <script src="http://oe3slowqt.bkt.clouddn.com/zepto.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+</head>
+
+
+<body style="background-color: #2F3235;">
+<img  src="{{ .Img }}"/>
+
+</body>
+
+<script type="text/javascript">
+		window.onload = function () {
+			document.getElementById('close').addEventListener('click', function () {
+				document.getElementById('tishi').style.display = 'none'
+			})
+		}
+</script>
+<div style="display:none">
+    <script src="http://s95.cnzz.com/z_stat.php?id=1261414663&web_id=1261414663" language="JavaScript"></script>
+</div>
+
+<div style="display:none">
+    <script>
+        var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?ee5dcd25efc668dc45af70dfb42a5aeb";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+   	</script>
+</div>
+
+<!--<script type="text/javascript">-->
+    <!--wx.config({-->
+        <!--debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。-->
+        <!--appId: '<?= $this->context->weixinConf['appId']?>', // 必填，公众号的唯一标识-->
+        <!--timestamp: <?= $this->context->weixinConf['timestamp']?> , // 必填，生成签名的时间戳-->
+        <!--nonceStr: '<?= $this->context->weixinConf['nonceStr']?>', // 必填，生成签名的随机串-->
+        <!--signature: '<?= $this->context->weixinConf['signature']?>',// 必填，签名，见附录1-->
+        <!--jsApiList: <?= json_encode($this->context->weixinConf['jsApiList'])?> // 必填，需要使用的JS接口列表，所有JS接口列表见附录2-->
+    <!--});-->
+    <!--wx.ready(function(){-->
+        <!--wx.hideMenuItems({-->
+            <!--menuList:<?= json_encode($this->context->weixinConf['hideMenuItems'])?>-->
+       <!--});-->
+    	<!--console.log('OK');-->
+    <!--});-->
+    <!--wx.error(function(res){-->
+        <!--console.log(res);-->
+    <!--});-->
+<!--</script>-->
+
+</html>

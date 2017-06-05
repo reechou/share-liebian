@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"html/template"
 
 	"github.com/chanxuehong/rand"
 	"github.com/chanxuehong/session"
@@ -26,6 +27,11 @@ const (
 	SHARE_URI_RECEIVE = "receive"
 	SHARE_URI_SHOW    = "show"
 )
+
+type ShareTpl struct {
+	Title string
+	Img   string
+}
 
 type HandlerRequest struct {
 	Method string
@@ -65,7 +71,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	
 	if strings.HasSuffix(rr.Path, "txt") {
 		http.ServeFile(w, r, self.l.cfg.LefitOauth.MpVerifyDir + rr.Path)
-		return 
+		return
 	}
 	
 	params := strings.Split(rr.Path, "/")
@@ -107,8 +113,21 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		holmes.Debug("token: %+v", token)
-
-		json.NewEncoder(w).Encode(token)
+		//json.NewEncoder(w).Encode(token)
+		t, err := template.ParseFiles("./views/share.html")
+		if err != nil {
+			holmes.Error("parse file error: %v", err)
+			return
+		}
+		shareData := &ShareTpl{
+			Title: "长按扫描二维码",
+			Img:   "http://oe3slowqt.bkt.clouddn.com/FkiQr_9vRzhxXbK7r-IiUjT6tNbB",
+		}
+		err = t.Execute(w, shareData)
+		if err != nil {
+			holmes.Error("execute tmp error: %v", err)
+			return
+		}
 	default:
 		http.ServeFile(w, r, self.l.cfg.LefitOauth.MpVerifyDir + rr.Path)
 	}
