@@ -39,6 +39,7 @@ func (self *Logic) Run() {
 	}
 	
 	mux := http.NewServeMux()
+	mux.Handle("/", &IndexHandler{})
 	mux.Handle(LePrefix+"/", NewLeHandler(self))
 
 	holmes.Info("server starting on[%s] ...", self.cfg.Host)
