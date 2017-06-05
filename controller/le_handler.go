@@ -12,7 +12,6 @@ import (
 
 	"github.com/chanxuehong/rand"
 	"github.com/chanxuehong/session"
-	"github.com/chanxuehong/sid"
 	mpoauth2 "github.com/chanxuehong/wechat.v2/mp/oauth2"
 	"github.com/chanxuehong/wechat.v2/oauth2"
 	"github.com/reechou/holmes"
@@ -67,45 +66,13 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch params[0] {
 	case SHARE_URI_RECEIVE:
-		sid := sid.New()
 		state := string(rand.NewHex())
-
-		if err := self.lefitSessionStorage.Add(sid, state); err != nil {
-			io.WriteString(w, err.Error())
-			holmes.Error("session write error: %v", err)
-			return
-		}
-
-		cookie := http.Cookie{
-			Name:     "sid",
-			Value:    sid,
-			HttpOnly: true,
-		}
-		http.SetCookie(w, &cookie)
-		holmes.Debug("sid: %s", cookie.Value)
 
 		AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId, fmt.Sprintf("%s/%s", self.l.cfg.LefitOauth.LefitOauth2RedirectURI, params[1]), self.l.cfg.LefitOauth.LefitOauth2Scope, state)
 		holmes.Debug("auth code url: %s", AuthCodeURL)
 
 		http.Redirect(w, r, AuthCodeURL, http.StatusFound)
 	case SHARE_URI_SHOW:
-		cookie, err := r.Cookie("sid")
-		if err != nil {
-			io.WriteString(w, err.Error())
-			holmes.Error("get cookie error: %v", err)
-			return
-		}
-		
-		holmes.Debug("cookie: %s", cookie.Value)
-
-		session, err := self.lefitSessionStorage.Get(cookie.Value)
-		if err != nil {
-			io.WriteString(w, err.Error())
-			holmes.Error("session get error: %v", err)
-			return
-		}
-
-		savedState := session.(string) // 一般是要序列化的, 这里保存在内存所以可以这么做
 		queryValues, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
 			io.WriteString(w, err.Error())
@@ -116,18 +83,6 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		code := queryValues.Get("code")
 		if code == "" {
 			holmes.Error("用户禁止授权")
-			return
-		}
-
-		queryState := queryValues.Get("state")
-		if queryState == "" {
-			holmes.Error("state 参数为空")
-			return
-		}
-		if savedState != queryState {
-			str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", savedState, queryState)
-			io.WriteString(w, str)
-			holmes.Error(str)
 			return
 		}
 
