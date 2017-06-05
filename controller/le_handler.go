@@ -102,6 +102,8 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			holmes.Error("用户禁止授权")
 			return
 		}
+		
+		holmes.Debug("code: %s", code)
 
 		oauth2Client := oauth2.Client{
 			Endpoint: self.lefitOauth2Endpoint,
