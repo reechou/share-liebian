@@ -58,13 +58,12 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	holmes.Debug("rr: %v", rr)
-	
 	params := strings.Split(rr.Path, "/")
 	if len(params) != 2 {
-		holmes.Error("params[%s] error", rr.Path)
 		return
 	}
+	
+	holmes.Debug("rr: %v", rr)
 
 	switch params[0] {
 	case SHARE_URI_RECEIVE:
