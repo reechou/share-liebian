@@ -59,8 +59,13 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	
 	//holmes.Debug("rr: %v path[%s]", rr, rr.Path)
 	if rr.Path == "" {
-		holmes.Debug("in balance heartbeat")
+		//holmes.Debug("in balance heartbeat")
 		return
+	}
+	
+	if strings.HasSuffix(rr.Path, "txt") {
+		http.ServeFile(w, r, self.l.cfg.LefitOauth.MpVerifyDir + rr.Path)
+		return 
 	}
 	
 	params := strings.Split(rr.Path, "/")
