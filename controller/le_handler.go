@@ -75,8 +75,6 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			holmes.Error("session write error: %v", err)
 			return
 		}
-		
-		holmes.Debug("sid: %s", sid)
 
 		cookie := http.Cookie{
 			Name:     "sid",
@@ -84,6 +82,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)
+		holmes.Debug("sid: %s", cookie.Value)
 
 		AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId, fmt.Sprintf("%s/%s", self.l.cfg.LefitOauth.LefitOauth2RedirectURI, params[1]), self.l.cfg.LefitOauth.LefitOauth2Scope, state)
 		holmes.Debug("auth code url: %s", AuthCodeURL)
