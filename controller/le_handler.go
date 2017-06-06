@@ -109,6 +109,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		code := queryValues.Get("code")
 		if code == "" {
+REDIRECT:
 			state := string(rand.NewHex())
 			redirectUrl := fmt.Sprintf("http://%s%s", r.Host, r.URL.String())
 			holmes.Debug("redirectUrl: %s", redirectUrl)
@@ -124,9 +125,10 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		token, err := self.oauth2Client.ExchangeToken(code)
 		if err != nil {
-			io.WriteString(w, "请重新扫描!")
+			//io.WriteString(w, "请重新扫描!")
 			holmes.Error("exchange token error: %v", err)
-			return
+			goto REDIRECT
+			//return
 		}
 		holmes.Debug("token: %+v", token)
 		//json.NewEncoder(w).Encode(token)
