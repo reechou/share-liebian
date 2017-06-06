@@ -84,7 +84,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	holmes.Debug("rr: %v", rr)
+	//holmes.Debug("rr: %v", rr)
 
 	switch params[0] {
 	case SHARE_URI_RECEIVE:
@@ -96,9 +96,6 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		holmes.Debug("auth code url: %s", AuthCodeURL)
 		http.Redirect(w, r, AuthCodeURL, http.StatusFound)
 	case SHARE_URI_SHOW:
-		redirectUrl := fmt.Sprintf("%s%s", r.Host, r.URL.String())
-		holmes.Debug("start redirectUrl: %s", redirectUrl)
-
 		queryValues, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
 			io.WriteString(w, err.Error())
@@ -151,7 +148,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			Img:   imgUrl,
 		}
 		renderView(w, "./views/share.html", shareData)
-		return 
+		return
 	default:
 		http.ServeFile(w, r, self.l.cfg.LefitOauth.MpVerifyDir+rr.Path)
 	}
