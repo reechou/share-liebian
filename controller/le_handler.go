@@ -62,6 +62,7 @@ func NewLeHandler(l *Logic) *LeHandler {
 }
 
 func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	holmes.Debug("rrrrrrr: %v", r.URL)
 	rr, err := parseRequest(r)
 	if err != nil {
 		holmes.Error("parse request error: %v", err)
