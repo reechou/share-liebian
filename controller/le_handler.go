@@ -120,7 +120,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		
-		holmes.Debug("code: %s %+v", code, r.URL)
+		holmes.Debug("code: %s %v %s", code, r.URL, r.URL.RawPath)
 
 		token, err := self.oauth2Client.ExchangeToken(code)
 		if err != nil {
