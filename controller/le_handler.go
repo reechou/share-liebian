@@ -90,10 +90,8 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch params[0] {
 	case SHARE_URI_RECEIVE:
 		state := string(rand.NewHex())
-
 		AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId, fmt.Sprintf("%s/%s", self.l.cfg.LefitOauth.LefitOauth2RedirectURI, params[1]), self.l.cfg.LefitOauth.LefitOauth2Scope, state)
 		holmes.Debug("auth code url: %s", AuthCodeURL)
-
 		http.Redirect(w, r, AuthCodeURL, http.StatusFound)
 	case SHARE_URI_SHOW:
 		queryValues, err := url.ParseQuery(r.URL.RawQuery)
@@ -105,7 +103,10 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		code := queryValues.Get("code")
 		if code == "" {
-			holmes.Error("用户禁止授权")
+			state := string(rand.NewHex())
+			AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId, fmt.Sprintf("%s/%s", self.l.cfg.LefitOauth.LefitOauth2RedirectURI, params[1]), self.l.cfg.LefitOauth.LefitOauth2Scope, state)
+			holmes.Debug("auth code url: %s", AuthCodeURL)
+			http.Redirect(w, r, AuthCodeURL, http.StatusFound)
 			return
 		}
 
