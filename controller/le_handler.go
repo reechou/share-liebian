@@ -27,7 +27,7 @@ const (
 
 const (
 	SHARE_URI_RECEIVE = "receive"
-	SHARE_URI_SHOW    = "show"
+	SHARE_URI_SHOW    = "showshare"
 )
 
 type ShareTpl struct {
@@ -110,7 +110,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		
-		holmes.Debug("code: %s", code)
+		holmes.Debug("code: %s %s", code, r.URL.String())
 
 		token, err := self.oauth2Client.ExchangeToken(code)
 		if err != nil {
