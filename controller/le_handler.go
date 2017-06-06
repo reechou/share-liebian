@@ -97,6 +97,9 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		holmes.Debug("auth code url: %s", AuthCodeURL)
 		http.Redirect(w, r, AuthCodeURL, http.StatusFound)
 	case SHARE_URI_SHOW:
+		redirectUrl := fmt.Sprintf("%s%s", r.Host, r.URL.String())
+		holmes.Debug("start redirectUrl: %s", redirectUrl)
+		
 		queryValues, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
 			io.WriteString(w, err.Error())
