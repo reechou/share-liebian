@@ -27,7 +27,7 @@ const (
 
 const (
 	SHARE_URI_RECEIVE = "receive"
-	SHARE_URI_SHOW    = "showshare"
+	SHARE_URI_SHOW    = "show"
 )
 
 type ShareTpl struct {
@@ -62,7 +62,6 @@ func NewLeHandler(l *Logic) *LeHandler {
 }
 
 func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	holmes.Debug("rrrrrrr: %v", r.URL)
 	rr, err := parseRequest(r)
 	if err != nil {
 		holmes.Error("parse request error: %v", err)
