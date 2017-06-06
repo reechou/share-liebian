@@ -108,8 +108,8 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		code := queryValues.Get("code")
-		if code == "" {
 REDIRECT:
+		if code == "" {
 			state := string(rand.NewHex())
 			redirectUrl := fmt.Sprintf("http://%s%s", r.Host, r.URL.String())
 			holmes.Debug("redirectUrl: %s", redirectUrl)
@@ -127,6 +127,7 @@ REDIRECT:
 		if err != nil {
 			//io.WriteString(w, "请重新扫描!")
 			holmes.Error("exchange token error: %v", err)
+			code = ""
 			goto REDIRECT
 			//return
 		}
