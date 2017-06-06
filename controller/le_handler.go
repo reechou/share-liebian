@@ -101,20 +101,6 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		redirectUrl := fmt.Sprintf("%s%s", r.Host, r.URL.String())
 		holmes.Debug("start redirectUrl: %s", redirectUrl)
 		
-		cookie, err := r.Cookie("sid")
-		if err != nil {
-			io.WriteString(w, err.Error())
-			return
-		}
-		
-		session, err := self.lefitSessionStorage.Get(cookie.Value)
-		if err != nil {
-			io.WriteString(w, err.Error())
-			return
-		}
-		
-		savedState := session.(string)
-		
 		queryValues, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
 			io.WriteString(w, err.Error())
@@ -147,6 +133,17 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		
+		cookie, err := r.Cookie("sid")
+		if err != nil {
+			io.WriteString(w, err.Error())
+			return
+		}
+		session, err := self.lefitSessionStorage.Get(cookie.Value)
+		if err != nil {
+			io.WriteString(w, err.Error())
+			return
+		}
+		savedState := session.(string)
 		queryState := queryValues.Get("state")
 		if queryState == "" {
 			return
