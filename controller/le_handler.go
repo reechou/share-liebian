@@ -126,6 +126,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			//io.WriteString(w, "请重新扫描!")
 			holmes.Error("exchange token error: %v", err)
+			http.Redirect(w, r, fmt.Sprintf("http://%s%s", r.Host, r.URL.Path), http.StatusFound)
 			return
 		}
 		holmes.Debug("token: %+v", token)
