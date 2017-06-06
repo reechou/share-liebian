@@ -19,6 +19,7 @@ import (
 	"github.com/reechou/holmes"
 	"github.com/reechou/share-liebian/proto"
 	"github.com/reechou/share-liebian/ext"
+	"github.com/chanxuehong/sid"
 )
 
 const (
@@ -100,6 +101,20 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		redirectUrl := fmt.Sprintf("%s%s", r.Host, r.URL.String())
 		holmes.Debug("start redirectUrl: %s", redirectUrl)
 		
+		cookie, err := r.Cookie("sid")
+		if err != nil {
+			io.WriteString(w, err.Error())
+			return
+		}
+		
+		session, err := self.lefitSessionStorage.Get(cookie.Value)
+		if err != nil {
+			io.WriteString(w, err.Error())
+			return
+		}
+		
+		savedState := session.(string)
+		
 		queryValues, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
 			io.WriteString(w, err.Error())
@@ -109,7 +124,19 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		code := queryValues.Get("code")
 		if code == "" {
+			sid := sid.New()
 			state := string(rand.NewHex())
+			if err := self.lefitSessionStorage.Add(sid, state); err != nil {
+				io.WriteString(w, err.Error())
+				return
+			}
+			cookie := http.Cookie{
+				Name:     "sid",
+				Value:    sid,
+				HttpOnly: true,
+			}
+			http.SetCookie(w, &cookie)
+			
 			redirectUrl := fmt.Sprintf("http://%s%s", r.Host, r.URL.String())
 			holmes.Debug("redirectUrl: %s", redirectUrl)
 			AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId,
@@ -117,6 +144,16 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				self.l.cfg.LefitOauth.LefitOauth2Scope, state)
 			holmes.Debug("authCodeURL: %s", AuthCodeURL)
 			http.Redirect(w, r, AuthCodeURL, http.StatusFound)
+			return
+		}
+		
+		queryState := queryValues.Get("state")
+		if queryState == "" {
+			return
+		}
+		if savedState != queryState {
+			str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", savedState, queryState)
+			io.WriteString(w, str)
 			return
 		}
 		
