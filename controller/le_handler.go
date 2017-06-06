@@ -110,7 +110,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		code := queryValues.Get("code")
 		if code == "" {
 			state := string(rand.NewHex())
-			redirectUrl := fmt.Sprintf("%s%s", r.Host, r.URL.String())
+			redirectUrl := fmt.Sprintf("http://%s%s", r.Host, r.URL.String())
 			holmes.Debug("redirectUrl: %s", redirectUrl)
 			AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId,
 				redirectUrl,
@@ -120,7 +120,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		
-		holmes.Debug("code: %s %s %s", code, r.Host, r.URL.String())
+		holmes.Debug("code: %s %s %s %s", code, r.Host, r.URL.String(), r.URL.Scheme)
 
 		token, err := self.oauth2Client.ExchangeToken(code)
 		if err != nil {
