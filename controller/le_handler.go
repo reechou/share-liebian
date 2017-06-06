@@ -109,6 +109,8 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, AuthCodeURL, http.StatusMovedPermanently)
 			return
 		}
+		
+		holmes.Debug("code: %s", code)
 
 		token, err := self.oauth2Client.ExchangeToken(code)
 		if err != nil {
