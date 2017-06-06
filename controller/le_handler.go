@@ -90,12 +90,25 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch params[0] {
 	case SHARE_URI_RECEIVE:
-		redirectUrl := fmt.Sprintf("%s%s", r.Host, r.URL.String())
-		holmes.Debug("start redirectUrl: %s", redirectUrl)
-		
+		sid := sid.New()
 		state := string(rand.NewHex())
-		AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId, fmt.Sprintf("%s/%s", self.l.cfg.LefitOauth.LefitOauth2RedirectURI, params[1]), self.l.cfg.LefitOauth.LefitOauth2Scope, state)
-		holmes.Debug("auth code url: %s", AuthCodeURL)
+		if err := self.lefitSessionStorage.Add(sid, state); err != nil {
+			io.WriteString(w, err.Error())
+			return
+		}
+		cookie := http.Cookie{
+			Name:     "sid",
+			Value:    sid,
+			HttpOnly: true,
+		}
+		http.SetCookie(w, &cookie)
+		
+		redirectUrl := fmt.Sprintf("http://%s%s", r.Host, r.URL.String())
+		holmes.Debug("redirectUrl: %s", redirectUrl)
+		AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId,
+			redirectUrl,
+			self.l.cfg.LefitOauth.LefitOauth2Scope, state)
+		holmes.Debug("authCodeURL: %s", AuthCodeURL)
 		http.Redirect(w, r, AuthCodeURL, http.StatusFound)
 	case SHARE_URI_SHOW:
 		redirectUrl := fmt.Sprintf("%s%s", r.Host, r.URL.String())
