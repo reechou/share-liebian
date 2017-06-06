@@ -105,7 +105,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if code == "" {
 			state := string(rand.NewHex())
 			AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId,
-				fmt.Sprintf("%s/%s", self.l.cfg.LefitOauth.LefitOauth2RedirectURI, params[1]),
+				fmt.Sprintf("%s%s", r.Host, r.URL.String()),
 				self.l.cfg.LefitOauth.LefitOauth2Scope, state)
 			holmes.Debug("auth code url: %s", AuthCodeURL)
 			http.Redirect(w, r, AuthCodeURL, http.StatusFound)
