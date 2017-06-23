@@ -1,90 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="">
-    <meta name="Copyright" content="">
-
-    <title>长按识别二维码</title>
+    <title>{{ .Title }}</title>
     <style type="text/css">
-           *{
-               margin: 0;
-               padding: 0;
-           }
-           .bg .img_bg{
-                width: 100%;
-                height: 100%;
-           }
-           .bg .title{
-                color: #37b023;
-                font-size: 0.25rem;
-                display: block;
-                position: absolute;
-                top: 0px;
-                height: 0.68rem;
-                width: 100%;
-                line-height: 0.68rem;
-                background: #f3f3f3;
-                padding-left: 0.7rem;
-                box-sizing: border-box;
-           }
-           .bg .title .img_ok{
-                width: 0.4rem;
-                height: 0.4rem;
-                background: red;
-                display: block;
-                position: absolute;
-                top: 0.15rem;
-                left: 8px;
-                background: url("http://weixinrobot.yunhoney.com/bg_ok.png") no-repeat;
-                background-size: cover;
-           }
-           .bg .close{
-                display: block;
-                width: 0.35rem;
-                height: 0.35rem;
-                background: url("http://weixinrobot.yunhoney.com/close.png") no-repeat;
-                background-size: cover;
-                position: absolute;
-                top: 0.15rem;
-                right: 0.2rem;
-           }
-           .bg{
-                background: #F3235;
-           }
-        </style>
+        *{ padding: 0; margin: 0 }
+        img{ width: 100%; display: block }
+    </style>
 </head>
 
 <body style="background-color: #2F3235;">
-<header></header>
-<section class="bg">
-            <!--<span class="title">-->
-                <!--<p class="img_ok"></p>-->
-                <!--此二维码安全，你可放心扫码。-->
-            <!--</span>-->
-    <!--<p class="close"></p>-->
-    <img alt="背景图" style="width:100%;" class="img_bg" src="{{ .Img }}">
-</section>
-<footer></footer>
-<script type="text/javascript">
-    var oHtml = document.getElementsByTagName("html")[0];
-    var scWidth = document.documentElement.offsetWidth || document.body.offsetWidth;
-    var initWid = 640;
-    oHtml.style.fontSize = 100*scWidth/initWid + "px";
-    var close = document.getElementsByClassName("close")[0];
-    var title = document.getElementsByClassName("title")[0];
-    close.onclick = function(){
-        title.style.display = "none";
-        close.style.display = "none";
-    }
-</script>
+<img  src="{{ .Img }}"/>
 </body>
 
 <div style="display:none">
