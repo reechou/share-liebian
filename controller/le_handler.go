@@ -32,6 +32,7 @@ const (
 type ShareTpl struct {
 	Title string
 	Img   string
+	Ty    int
 }
 
 type HandlerRequest struct {
@@ -146,6 +147,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		shareData := &ShareTpl{
 			Title: "长按二维码加入",
 			Img:   imgUrl,
+			Ty:    lbType,
 		}
 		renderView(w, "./views/share.html", shareData)
 		return
