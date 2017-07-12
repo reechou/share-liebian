@@ -43,11 +43,12 @@ type LiebianSrv struct {
 }
 
 type Config struct {
-	Debug     bool
-	Path      string
-	Host      string
-	Version   string
-	IfShowSql bool
+	Debug      bool
+	Path       string
+	Host       string
+	Version    string
+	IfShowSql  bool
+	ExpiredUrl string
 
 	DefaultRobotHost string
 
@@ -55,9 +56,9 @@ type Config struct {
 	RobotControllerHost
 	DBInfo
 	Tuling
-	
+
 	LefitOauth
-	
+
 	LiebianSrv
 }
 

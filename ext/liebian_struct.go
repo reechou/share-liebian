@@ -4,6 +4,12 @@ const (
 	LIEBIAN_SRV_SUCCESS = iota
 )
 
+const (
+	GET_URL_STATUS_OK = iota
+	GET_URL_STATUS_HAS_EXIST
+	GET_URL_STATUS_EXPIRED
+)
+
 type GetQRCodeUrlReq struct {
 	AppId  string `json:"appId,omitempty"`
 	OpenId string `json:"openId,omitempty"`

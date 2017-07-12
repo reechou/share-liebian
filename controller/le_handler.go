@@ -134,19 +134,24 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			OpenId: token.OpenId,
 			Type:   int64(lbType),
 		}
-		imgUrl, err := self.l.LiebianExt.GetLiebianQrCodeUrl(liebianReq)
+		urlRsp, err := self.l.LiebianExt.GetLiebianQrCodeUrl(liebianReq)
 		if err != nil {
 			holmes.Error("get lieban qrcode url error: %v", err)
+			io.WriteString(w, "请再试一次!")
+			return
+		}
+		//holmes.Debug("get url: %v", urlRsp)
+		if urlRsp.Result.Url == "" {
 			io.WriteString(w, "暂无二维码可扫!")
 			return
 		}
-		if imgUrl == "" {
-			io.WriteString(w, "暂无二维码可扫!")
+		if urlRsp.Status == ext.GET_URL_STATUS_EXPIRED {
+			http.Redirect(w, r, self.l.cfg.ExpiredUrl, http.StatusFound)
 			return
 		}
 		shareData := &ShareTpl{
-			Title: "长按二维码加入",
-			Img:   imgUrl,
+			Title: "长按扫描二维码",
+			Img:   urlRsp.Result.Url,
 			Ty:    lbType,
 		}
 		renderView(w, "./views/share.html", shareData)
