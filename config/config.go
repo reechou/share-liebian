@@ -43,12 +43,13 @@ type LiebianSrv struct {
 }
 
 type Config struct {
-	Debug      bool
-	Path       string
-	Host       string
-	Version    string
-	IfShowSql  bool
-	ExpiredUrl string
+	Debug         bool
+	Path          string
+	Host          string
+	Version       string
+	IfShowSql     bool
+	IfUseRedirect bool
+	ExpiredUrl    string
 
 	DefaultRobotHost string
 

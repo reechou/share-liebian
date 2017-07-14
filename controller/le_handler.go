@@ -145,9 +145,11 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			io.WriteString(w, "暂无二维码可扫!")
 			return
 		}
-		if urlRsp.Status == ext.GET_URL_STATUS_EXPIRED {
-			http.Redirect(w, r, self.l.cfg.ExpiredUrl, http.StatusFound)
-			return
+		if self.l.cfg.IfUseRedirect {
+			if urlRsp.Status == ext.GET_URL_STATUS_EXPIRED {
+				http.Redirect(w, r, self.l.cfg.ExpiredUrl, http.StatusFound)
+				return
+			}
 		}
 		shareData := &ShareTpl{
 			Title: "长按扫描二维码",
