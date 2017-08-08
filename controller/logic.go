@@ -14,6 +14,7 @@ type Logic struct {
 	sync.Mutex
 	
 	LiebianExt *ext.LiebianExt
+	weixinxExt *ext.WeixinxExt
 	
 	cfg *config.Config
 }
@@ -23,6 +24,7 @@ func NewLogic(cfg *config.Config) *Logic {
 		cfg: cfg,
 	}
 	l.LiebianExt = ext.NewLiebianExt(cfg)
+	l.weixinxExt = ext.NewWeixinxExt(cfg)
 	l.init()
 
 	return l

@@ -42,6 +42,10 @@ type LiebianSrv struct {
 	Host string
 }
 
+type WeixinxSrv struct {
+	Host string
+}
+
 type Config struct {
 	Debug         bool
 	Path          string
@@ -61,6 +65,7 @@ type Config struct {
 	LefitOauth
 
 	LiebianSrv
+	WeixinxSrv
 }
 
 func NewConfig() *Config {
