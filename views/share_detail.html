@@ -11,10 +11,10 @@
         width: 100%;
         height: 360px;
     }
-    .lb_page video{
+    .lb-page video{
         margin-bottom: 10px;
     }
-    .course_name{
+    .course-name{
         font-size: 20px;
         font-weight: 900;
         font-family: "Microsoft YaHei";
@@ -44,12 +44,12 @@
         align-items: center;
         border-bottom: 10px solid #d0d0d0;
     }
-    .attend_num{
+    .attend-num{
         padding-left: 10px;
         color: #b5b0b0;
         font-size: 15px;
     }
-    .avatar_img{
+    .avatar-img{
         display: flex;
         display: -webkit-box;
         display: -webkit-flex;
@@ -62,7 +62,7 @@
         justify-content: center;
         padding-right: 10px;
     }
-    .avatar_img img{
+    .avatar-img img{
         width: 33px;
         height: 33px;
         border-radius: 50%;
@@ -71,7 +71,7 @@
     .price{
         text-decoration: line-through;
     }
-    .attend_btn{
+    .attend-btn{
         height: 55px;
         width:100%;
         text-align: center;
@@ -82,7 +82,7 @@
         bottom: 0px;
         border: 1px #ff6767;
     }
-    .info_title{
+    .info-title{
         border-bottom: 1px solid #d0d0d0;
         height: 50px;
         font-size: 16px;
@@ -96,7 +96,7 @@
         -o-align-items: center;
         align-items: center;
     }
-    .course_info{
+    .course-info{
         display: flex;
         display: -webkit-box;
         display: -webkit-flex;
@@ -109,7 +109,7 @@
         align-items: center;
         border-bottom: 1px solid #ff6767;
     }
-    .course_price{
+    .course-price{
         padding-right: 10px;
         color: #ff6767;
         display: flex;
@@ -129,11 +129,11 @@
         font-size: 14px;
         margin-bottom: 5px;
     }
-    .btn_c{
+    .btn-c{
         padding-right: 10px;
         padding-left: 10px;
     }
-    .btn_c:nth-child(1){
+    .btn-c:nth-child(1){
         border-right: 1px solid #949494;
         color:#ff6767;
     }
@@ -143,7 +143,7 @@
         color: #676767;
         display: none;
     }
-    #desc_0{
+    #desc-0{
         background-color: yellow;
         margin-bottom: 2px;
         color: blue;
@@ -156,7 +156,7 @@
     p{
         margin-bottom: 5px;
     }
-    .more_btn{
+    .more-btn{
         width: 100px;
         border: 2px solid #ff6767;
         border-radius: 10px;
@@ -190,25 +190,25 @@
     </style>
 </head>
 <body>
-    <div class="lb_page" style="width:100%; margin-bottom:60px;">
+    <div class="lb-page" style="width:100%; margin-bottom:60px;">
 
-        <div class="bg_img" style="background: #191919; opacity: 0.8; display: none; position: fixed; width: 100%; height: 100%;"></div>
-        <img class="lb_img" src="{{ .Qrcode }}" style="display: none; position: absolute; top: 5%; left: 0; width: 100%"/>
+        <div class="bg-img" style="background: #191919; opacity: 0.8; display: none; position: fixed; width: 100%; height: 100%;"></div>
+        <img class="lb-img" src="{{ .Qrcode }}" style="display: none; position: absolute; top: 5%; left: 0; width: 100%"/>
 
         <!-- <video src="http://ugcbsy.qq.com/flv/245/220/l0348fhl31c.m701.mp4?vkey=61171E56D3A20A6050320E74397D866DC5990F7E40B88277954D9A4991171A38B9D3A60088360F2B00C893E7469C1016390B22E90B99424DD6496F70A1ECDF9702253DED83D5E502A5BC921A909C96FF7DD3624151A090E774F888B2136EC5B33CB8BEF7094FBF5F7603940E28C9E1AA502118655A246EF0&br=12&platform=2&fmt=auto&level=0&sdtfrom=v5010&guid=a774d180dd37cf7943f5c777a3ea2774"  class="vid" controls="controls" poster="./poster.png" ></video>  -->
         <div id="vid">
             <img src="{{ .Header }}" style="width:100%;"/>
         </div>
-        <!--<div class="course_info">-->
+        <!--<div class="course-info">-->
             <!--<div class="course">-->
-                <!--<div class="course_name" >{{ .Title }}</div>-->
+                <!--<div class="course-name" >{{ .Title }}</div>-->
                 <!--<div class="time" id="time_one">时间: 2017-11-21</div>-->
             <!--</div>-->
-            <!--<div class="course_price"><div class="price">￥199</div>&nbsp;&nbsp;&nbsp;(限时免费)</div>-->
+            <!--<div class="course-price"><div class="price">￥199</div>&nbsp;&nbsp;&nbsp;(限时免费)</div>-->
         <!--</div>-->
         <!--<div class="attend">-->
-            <!--<div class="attend_num">报名人数  70043人</div>-->
-            <!--<div class="avatar_img">-->
+            <!--<div class="attend-num">报名人数  70043人</div>-->
+            <!--<div class="avatar-img">-->
                 <!--<img src="https://oss.ririyuedu.com/tmp/wxb2de1aacb42e47df.o6zAJs6e4iQOHuo7DT2vSURT-cTg.cd88f09e2a02672ea699e0ad92cf62df.jpg"/>-->
                 <!--<img src="https://oss.ririyuedu.com/tmp/wxb2de1aacb42e47df.o6zAJs6e4iQOHuo7DT2vSURT-cTg.107470b8501fd130ea01053373d809bf.jpg"/>-->
                 <!--<img src="https://oss.ririyuedu.com/tmp/wxb2de1aacb42e47df.o6zAJs6e4iQOHuo7DT2vSURT-cTg.dd8593b076677aecf6436a052acd6d01.jpg"/>-->
@@ -218,24 +218,24 @@
 
         <img src="{{ .Ab }}" style="width:100%;"/>
 
-        <button class="attend_btn" onclick="doConfirm()">
+        <button class="attend-btn" onclick="doConfirm()">
             <div class="color: #fff">立即免费报名</div>
         </button>
 
     </div>
 
-    <script src="http://oe3slowqt.bkt.clouddn.com/zepto.min.js"></script>
+    <script type="text/javascript" src="https://oss.ririyuedu.com/zepto.min.js"></script>
     <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>
     <script type="text/javascript">
         function showLbImg(){
-            $('.bg_img').show();
-            $('.lb_img').show();
-            $('.attend_btn').hide();
+            $('.bg-img').show();
+            $('.lb-img').show();
+            $('.attend-btn').hide();
         }
-        $('.bg_img').click(function(){
-            $('.bg_img').hide();
-            $('.lb_img').hide();
-            $('.attend_btn').show();
+        $('.bg-img').click(function(){
+            $('.bg-img').hide();
+            $('.lb-img').hide();
+            $('.attend-btn').show();
         });
 
         function doConfirm() {
