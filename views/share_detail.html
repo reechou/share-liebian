@@ -78,9 +78,8 @@
         background-color: #ff6767;
         color: #fff;
         font-size:20px;
-        position: fixed;
+        position: fixed ! important;
         bottom: 0px;
-        border: 1px #ff6767;
     }
     .info-title{
         border-bottom: 1px solid #d0d0d0;
@@ -218,9 +217,9 @@
 
         <img src="{{ .Ab }}" style="width:100%;"/>
 
-        <button class="attend-btn" onclick="doConfirm()">
+        <div class="attend-btn" onclick="doConfirm()">
             <div class="color: #fff">立即免费报名</div>
-        </button>
+        </div>
 
     </div>
 
