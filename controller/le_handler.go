@@ -190,10 +190,10 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//holmes.Debug("request: %s %s %s", r.URL.Scheme, r.Host, r.URL.Path)
-		scheme := "http://"
-		if r.TLS != nil {
-			scheme = "https://"
-		}
+		scheme := "https://"
+		//if r.TLS != nil {
+		//	scheme = "https://"
+		//}
 
 		code := queryValues.Get("code")
 		if code == "" {
