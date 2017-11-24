@@ -27,6 +27,7 @@ const (
 const (
 	SHARE_URI_RECEIVE = "receive"
 	SHARE_URI_SHOW    = "show"
+	SHARE_URI_DETAIL  = "detail"
 )
 
 type ShareTpl struct {
@@ -152,13 +153,13 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		//}
 		// --- new logic
 		liebianReq := &ext.GetLiebianInfoReq{
-			AppId:  self.l.cfg.LefitOauth.LefitWxAppId,
-			OpenId: token.OpenId,
-			LiebianType:   int64(lbType),
+			AppId:       self.l.cfg.LefitOauth.LefitWxAppId,
+			OpenId:      token.OpenId,
+			LiebianType: int64(lbType),
 		}
 		urlRsp, err := self.l.weixinxExt.GetLiebianQrCodeUrl(liebianReq)
 		if err != nil {
-			holmes.Error("get lieban qrcode url error: %v", err)
+			holmes.Error("get lieban qrcode url of type[%d] error: %v", lbType, err)
 			io.WriteString(w, "请再试一次!")
 			return
 		}
@@ -179,6 +180,75 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			Ty:    lbType,
 		}
 		renderView(w, "./views/share.html", shareData)
+		return
+	case SHARE_URI_DETAIL:
+		queryValues, err := url.ParseQuery(r.URL.RawQuery)
+		if err != nil {
+			io.WriteString(w, err.Error())
+			holmes.Error("url parse query error: %v", err)
+			return
+		}
+
+		//holmes.Debug("request: %s %s %s", r.URL.Scheme, r.Host, r.URL.Path)
+		scheme := "http://"
+		if r.TLS != nil {
+			scheme = "https://"
+		}
+
+		code := queryValues.Get("code")
+		if code == "" {
+			state := string(rand.NewHex())
+			redirectUrl := fmt.Sprintf("%s%s%s", scheme, r.Host, r.URL.String())
+			AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.LefitOauth.LefitWxAppId,
+				redirectUrl,
+				self.l.cfg.LefitOauth.LefitOauth2Scope, state)
+			http.Redirect(w, r, AuthCodeURL, http.StatusFound)
+			return
+		}
+
+		token, err := self.oauth2Client.ExchangeToken(code)
+		if err != nil {
+			http.Redirect(w, r, fmt.Sprintf("%s%s%s", scheme, r.Host, r.URL.Path), http.StatusFound)
+			return
+		}
+		lbType, err := strconv.Atoi(params[1])
+		if err != nil {
+			holmes.Error("strconv param[%s] error: %v", params[1], err)
+			return
+		}
+		// --- new logic
+		liebianReq := &ext.GetLiebianInfoReq{
+			AppId:       self.l.cfg.LefitOauth.LefitWxAppId,
+			OpenId:      token.OpenId,
+			LiebianType: int64(lbType),
+		}
+		urlRsp, err := self.l.weixinxExt.GetLiebianQrCodeUrl(liebianReq)
+		if err != nil {
+			holmes.Error("get lieban qrcode url of type[%d] error: %v", lbType, err)
+			io.WriteString(w, "请再试一次!")
+			return
+		}
+		if urlRsp.Qrcode == "" {
+			io.WriteString(w, "暂无二维码可扫, 请稍后重试!")
+			return
+		}
+		if self.l.cfg.IfUseRedirect {
+			if urlRsp.Status == ext.GET_URL_STATUS_EXPIRED {
+				http.Redirect(w, r, self.l.cfg.ExpiredUrl, http.StatusFound)
+				return
+			}
+		}
+		// --- new logic end
+		if lbInfo, ok := self.l.cfg.LiebianDetailMap[lbType]; ok {
+			renderView(w, "./views/share_detail.html", map[string]interface{}{
+				"Title":      lbInfo.Title,
+				"HeaderType": lbInfo.HeaderType,
+				"Header":     lbInfo.Header,
+				"Ab":         lbInfo.Ab,
+				"Qrcode":     urlRsp.Qrcode,
+				"Ty":         lbType,
+			})
+		}
 		return
 	default:
 		http.ServeFile(w, r, self.l.cfg.LefitOauth.MpVerifyDir+rr.Path)

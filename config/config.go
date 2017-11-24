@@ -38,6 +38,22 @@ type LefitOauth struct {
 	MpVerifyDir            string
 }
 
+type LiebianDetail struct {
+	LiebianType []int
+	Title       []string
+	HeaderType  []string
+	Header      []string
+	Ab          []string
+}
+
+type LiebianDetailInfo struct {
+	LiebianType int
+	Title       string
+	HeaderType  string
+	Header      string
+	Ab          string
+}
+
 type LiebianSrv struct {
 	Host string
 }
@@ -66,6 +82,10 @@ type Config struct {
 
 	LiebianSrv
 	WeixinxSrv
+	
+	LiebianDetail
+	
+	LiebianDetailMap map[int]*LiebianDetailInfo
 }
 
 func NewConfig() *Config {
@@ -88,6 +108,24 @@ func NewConfig() *Config {
 		fmt.Printf("config MapTo error: %v\n", err)
 		os.Exit(1)
 	}
+	
+	c.LiebianDetailMap = make(map[int]*LiebianDetailInfo)
+	for i := 0; i < len(c.LiebianDetail.LiebianType); i++ {
+		if i >= len(c.LiebianDetail.HeaderType) ||
+			i >= len(c.LiebianDetail.Title) ||
+			i >= len(c.LiebianDetail.Header) ||
+			i >= len(c.LiebianDetail.Ab) {
+			break
+		}
+		lti := new(LiebianDetailInfo)
+		lti.LiebianType = c.LiebianDetail.LiebianType[i]
+		lti.Title = c.LiebianDetail.Title[i]
+		lti.HeaderType = c.LiebianDetail.HeaderType[i]
+		lti.Header = c.LiebianDetail.Header[i]
+		lti.Ab = c.LiebianDetail.Ab[i]
+		c.LiebianDetailMap[lti.LiebianType] = lti
+	}
+	
 	fmt.Println(c)
 
 	return c

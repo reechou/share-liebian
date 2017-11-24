@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .Title }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css">
+    <style>
+    .vid{
+        width: 100%;
+        height: 360px;
+    }
+    .lb_page video{
+        margin-bottom: 10px;
+    }
+    .course_name{
+        font-size: 20px;
+        font-weight: 900;
+        font-family: "Microsoft YaHei";
+        margin-top: 40px;
+    }
+    .time{
+        font-weight: 500;
+        font-size: 13px;
+        color: #949494;
+        margin-bottom: 30px;
+    }
+    .course{
+        padding-left: 10px;
+    }
+    .attend{
+        width: 100%;
+        height: 50px;
+        display: flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        -o-align-items: center;
+        align-items: center;
+        border-bottom: 10px solid #d0d0d0;
+    }
+    .attend_num{
+        padding-left: 10px;
+        color: #b5b0b0;
+        font-size: 15px;
+    }
+    .avatar_img{
+        display: flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        -o-align-items: center;
+        align-items: center;
+        justify-content: center;
+        padding-right: 10px;
+    }
+    .avatar_img img{
+        width: 33px;
+        height: 33px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    .price{
+        text-decoration: line-through;
+    }
+    .attend_btn{
+        height: 55px;
+        width:100%;
+        text-align: center;
+        background-color: #ff6767;
+        color: #fff;
+        font-size:20px;
+        position: fixed;
+        bottom: 0px;
+        border: 1px #ff6767;
+    }
+    .info_title{
+        border-bottom: 1px solid #d0d0d0;
+        height: 50px;
+        font-size: 16px;
+        display: flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        -o-align-items: center;
+        align-items: center;
+    }
+    .course_info{
+        display: flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        -o-align-items: center;
+        align-items: center;
+        border-bottom: 1px solid #ff6767;
+    }
+    .course_price{
+        padding-right: 10px;
+        color: #ff6767;
+        display: flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        font-size: 15px;
+    }
+    pre{
+        margin-top: 5px;
+        font-size: 14px;
+        padding-left: 10px;
+        color: #676767;
+        white-space: wrap;
+    }
+    .people{
+        font-weight: 800;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    .btn_c{
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+    .btn_c:nth-child(1){
+        border-right: 1px solid #949494;
+        color:#ff6767;
+    }
+    #tab_con_1{
+        font-size: 14px;
+        margin-left:5px;
+        color: #676767;
+        display: none;
+    }
+    #desc_0{
+        background-color: yellow;
+        margin-bottom: 2px;
+        color: blue;
+    }
+    #red{
+        color: red;
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+    p{
+        margin-bottom: 5px;
+    }
+    .more_btn{
+        width: 100px;
+        border: 2px solid #ff6767;
+        border-radius: 10px;
+        display: flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        justify-content: center;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        -o-align-items: center;
+        align-items: center;
+    }
+    .btn{
+        width: 100%;
+        display: flex;
+        display: -webkit-box;
+        display: -webkit-flex;
+        justify-content: center;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        -o-align-items: center;
+        align-items: center;
+    }
+    a{
+        color: #fff;
+    }
+    </style>
+</head>
+<body>
+    <div class="lb_page" style="width:100%; margin-bottom:60px;">
+
+        <div class="bg_img" style="background: #191919; opacity: 0.8; display: none; position: fixed; width: 100%; height: 100%;"></div>
+        <img class="lb_img" src="{{ .Qrcode }}" style="display: none; position: absolute; top: 15%; left: 0; width: 100%"/>
+
+        <!-- <video src="http://ugcbsy.qq.com/flv/245/220/l0348fhl31c.m701.mp4?vkey=61171E56D3A20A6050320E74397D866DC5990F7E40B88277954D9A4991171A38B9D3A60088360F2B00C893E7469C1016390B22E90B99424DD6496F70A1ECDF9702253DED83D5E502A5BC921A909C96FF7DD3624151A090E774F888B2136EC5B33CB8BEF7094FBF5F7603940E28C9E1AA502118655A246EF0&br=12&platform=2&fmt=auto&level=0&sdtfrom=v5010&guid=a774d180dd37cf7943f5c777a3ea2774"  class="vid" controls="controls" poster="./poster.png" ></video>  -->
+        <div id="vid">
+            <img src="{{ .Header }}" style="width:100%;"/>
+        </div>
+        <!--<div class="course_info">-->
+            <!--<div class="course">-->
+                <!--<div class="course_name" >{{ .Title }}</div>-->
+                <!--<div class="time" id="time_one">时间: 2017-11-21</div>-->
+            <!--</div>-->
+            <!--<div class="course_price"><div class="price">￥199</div>&nbsp;&nbsp;&nbsp;(限时免费)</div>-->
+        <!--</div>-->
+        <!--<div class="attend">-->
+            <!--<div class="attend_num">报名人数  70043人</div>-->
+            <!--<div class="avatar_img">-->
+                <!--<img src="https://oss.ririyuedu.com/tmp/wxb2de1aacb42e47df.o6zAJs6e4iQOHuo7DT2vSURT-cTg.cd88f09e2a02672ea699e0ad92cf62df.jpg"/>-->
+                <!--<img src="https://oss.ririyuedu.com/tmp/wxb2de1aacb42e47df.o6zAJs6e4iQOHuo7DT2vSURT-cTg.107470b8501fd130ea01053373d809bf.jpg"/>-->
+                <!--<img src="https://oss.ririyuedu.com/tmp/wxb2de1aacb42e47df.o6zAJs6e4iQOHuo7DT2vSURT-cTg.dd8593b076677aecf6436a052acd6d01.jpg"/>-->
+                <!--<img src="https://oss.ririyuedu.com/tmp/wxb2de1aacb42e47df.o6zAJs6e4iQOHuo7DT2vSURT-cTg.a018f56e71d37dac1395ebceb6df9b72.jpg"/>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <img src="{{ .Ab }}" style="width:100%;"/>
+
+        <button class="attend_btn" onclick="doConfirm()">
+            <div class="color: #fff">立即免费报名</div>
+        </button>
+
+    </div>
+
+    <script src="http://oe3slowqt.bkt.clouddn.com/zepto.min.js"></script>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>
+    <script type="text/javascript">
+        function showLbImg(){
+            $('.bg_img').show();
+            $('.lb_img').show();
+            $('.attend_btn').hide();
+        }
+        $('.bg_img').click(function(){
+            $('.bg_img').hide();
+            $('.lb_img').hide();
+            $('.attend_btn').show();
+        });
+
+        function doConfirm() {
+            showLbImg();
+        }
+
+        function getDate() {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = this.addZero(date.getMonth() + 1);
+            var day = this.addZero(date.getDate());
+            var nowdate = year + '-' + month + '-' + day;
+            document.getElementById('time_one').innerHTML = '时间: ' +  nowdate;
+        }
+
+        function addZero(temp) {
+            if(temp < 10) {
+                return '0' + temp;
+            } else {
+                return temp;
+            }
+        }
+
+        $(function() {
+            this.getDate();
+            setTimeout(function() {
+                this.doConfirm();
+            }, 30000);
+        })
+  </script>
+</body>
+</html>
