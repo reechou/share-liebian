@@ -237,7 +237,7 @@
         </div>
 
         <div class="wxtip" id="lbtips">
-            <img src="{{ .Qrcode }}" />
+            <img id="lbtipsimg" src="{{ .Qrcode }}" />
         </div>
 
     </div>
@@ -245,10 +245,14 @@
     <script type="text/javascript" src="https://oss.ririyuedu.com/zepto.min.js"></script>
     <script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>
     <script type="text/javascript">
-        function showLbImg(){
+        function showLbImg() {
             document.getElementById('lbtips').style.display='block';
         }
-        $('.wxtip').click(function(){
+        $('#lbtips').click(function(e) {
+            obj = $(e.srcElement || e.target);
+            if($(obj).is("#lbtipsimg")) {
+                return;
+            }
             document.getElementById('lbtips').style.display='none';
         });
 
