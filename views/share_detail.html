@@ -283,6 +283,17 @@
                 this.doConfirm();
             }, 30000);
         })
-  </script>
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            {{ if eq .Ty 5 }}
+            hm.src = "https://hm.baidu.com/hm.js?2e342cd267266e600aa96ac5dcab2565";
+            {{ end }}
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </body>
 </html>
