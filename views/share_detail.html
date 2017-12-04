@@ -290,6 +290,8 @@
             var hm = document.createElement("script");
             {{ if eq .Ty 5 }}
             hm.src = "https://hm.baidu.com/hm.js?2e342cd267266e600aa96ac5dcab2565";
+            {{ else if eq .Ty 19 }}
+            hm.src = "https://hm.baidu.com/hm.js?143be24420353c646e0c9af43e717868";
             {{ end }}
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
