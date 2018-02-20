@@ -28,6 +28,7 @@ const (
 	SHARE_URI_RECEIVE = "receive"
 	SHARE_URI_SHOW    = "show"
 	SHARE_URI_DETAIL  = "detail"
+	SHARE_URI_DETAILX = "detailx"
 )
 
 type ShareTpl struct {
@@ -48,6 +49,11 @@ type LeHandler struct {
 	lefitSessionStorage *session.Storage
 	lefitOauth2Endpoint oauth2.Endpoint
 	oauth2Client        *oauth2.Client
+
+	sessionStorage *session.Storage
+	oauth2Num      int
+	oauth2Endpoint []oauth2.Endpoint
+	wxOauth2Client []*oauth2.Client
 }
 
 func NewLeHandler(l *Logic) *LeHandler {
@@ -57,6 +63,19 @@ func NewLeHandler(l *Logic) *LeHandler {
 	lh.lefitOauth2Endpoint = mpoauth2.NewEndpoint(lh.l.cfg.LefitOauth.LefitWxAppId, lh.l.cfg.LefitOauth.LefitWxAppSecret)
 	lh.oauth2Client = &oauth2.Client{
 		Endpoint: lh.lefitOauth2Endpoint,
+	}
+
+	lh.sessionStorage = session.New(20*60, 60*60)
+	lh.oauth2Num = len(lh.l.cfg.WxOauth.WxAppId)
+	lh.oauth2Endpoint = make([]oauth2.Endpoint, lh.oauth2Num)
+	lh.wxOauth2Client = make([]*oauth2.Client, lh.oauth2Num)
+	for i := 0; i < lh.oauth2Num; i++ {
+		lh.oauth2Endpoint[i] = mpoauth2.NewEndpoint(
+			lh.l.cfg.WxOauth.WxAppId[i],
+			lh.l.cfg.WxOauth.WxAppSecret[i])
+		lh.wxOauth2Client[i] = &oauth2.Client{
+			Endpoint: lh.oauth2Endpoint[i],
+		}
 	}
 
 	return lh
@@ -219,6 +238,89 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// --- new logic
 		liebianReq := &ext.GetLiebianInfoReq{
 			AppId:       self.l.cfg.LefitOauth.LefitWxAppId,
+			OpenId:      token.OpenId,
+			LiebianType: int64(lbType),
+		}
+		urlRsp, err := self.l.weixinxExt.GetLiebianQrCodeUrl(liebianReq)
+		if err != nil {
+			holmes.Error("get lieban qrcode url of type[%d] error: %v", lbType, err)
+			io.WriteString(w, "请再试一次!")
+			return
+		}
+		if urlRsp.Qrcode == "" {
+			io.WriteString(w, "暂无二维码可扫, 请稍后重试!")
+			return
+		}
+		if self.l.cfg.IfUseRedirect {
+			if urlRsp.Status == ext.GET_URL_STATUS_EXPIRED {
+				http.Redirect(w, r, self.l.cfg.ExpiredUrl, http.StatusFound)
+				return
+			}
+		}
+		// --- new logic end
+		if lbInfo, ok := self.l.cfg.LiebianDetailMap[lbType]; ok {
+			renderView(w, "./views/share_detail.html", map[string]interface{}{
+				"Title":      lbInfo.Title,
+				"HeaderType": lbInfo.HeaderType,
+				"Header":     lbInfo.Header,
+				"Ab":         lbInfo.Ab,
+				"Qrcode":     urlRsp.Qrcode,
+				"Ty":         lbType,
+			})
+		}
+		return
+	case SHARE_URI_DETAILX:
+		queryValues, err := url.ParseQuery(r.URL.RawQuery)
+		if err != nil {
+			io.WriteString(w, err.Error())
+			holmes.Error("url parse query error: %v", err)
+			return
+		}
+
+		appIdx := 0
+		app := queryValues.Get("app")
+		if app != "" {
+			appIdx, err = strconv.Atoi(app)
+			if err != nil {
+				holmes.Error("strconv app[%s] error: %v", app, err)
+				return
+			}
+		}
+		if appIdx >= self.oauth2Num {
+			holmes.Error("app idx[%d] confignum[%d] is not ok", appIdx, self.oauth2Num)
+			return
+		}
+
+		//holmes.Debug("request: %s %s %s", r.URL.Scheme, r.Host, r.URL.Path)
+		scheme := "https://"
+		//if r.TLS != nil {
+		//	scheme = "https://"
+		//}
+
+		code := queryValues.Get("code")
+		if code == "" {
+			state := string(rand.NewHex())
+			redirectUrl := fmt.Sprintf("%s%s%s", scheme, r.Host, r.URL.String())
+			AuthCodeURL := mpoauth2.AuthCodeURL(self.l.cfg.WxOauth.WxAppId[appIdx],
+				redirectUrl,
+				self.l.cfg.WxOauth.Oauth2ScopeBase, state)
+			http.Redirect(w, r, AuthCodeURL, http.StatusFound)
+			return
+		}
+
+		token, err := self.wxOauth2Client[appIdx].ExchangeToken(code)
+		if err != nil {
+			http.Redirect(w, r, fmt.Sprintf("%s%s%s", scheme, r.Host, r.URL.Path), http.StatusFound)
+			return
+		}
+		lbType, err := strconv.Atoi(params[1])
+		if err != nil {
+			holmes.Error("strconv param[%s] error: %v", params[1], err)
+			return
+		}
+		// --- new logic
+		liebianReq := &ext.GetLiebianInfoReq{
+			AppId:       self.l.cfg.WxOauth.WxAppId[appIdx],
 			OpenId:      token.OpenId,
 			LiebianType: int64(lbType),
 		}

@@ -38,6 +38,16 @@ type LefitOauth struct {
 	MpVerifyDir            string
 }
 
+type WxOauth struct {
+	WxAppId         []string
+	WxAppSecret     []string
+	MchId           []string
+	MchApiKey       []string
+	Oauth2ScopeBase string
+	Oauth2ScopeUser string
+	MpVerifyDir     string
+}
+
 type LiebianDetail struct {
 	LiebianType []int
 	Title       []string
@@ -79,12 +89,13 @@ type Config struct {
 	Tuling
 
 	LefitOauth
+	WxOauth
 
 	LiebianSrv
 	WeixinxSrv
-	
+
 	LiebianDetail
-	
+
 	LiebianDetailMap map[int]*LiebianDetailInfo
 }
 
@@ -108,7 +119,7 @@ func NewConfig() *Config {
 		fmt.Printf("config MapTo error: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	c.LiebianDetailMap = make(map[int]*LiebianDetailInfo)
 	for i := 0; i < len(c.LiebianDetail.LiebianType); i++ {
 		if i >= len(c.LiebianDetail.HeaderType) ||
@@ -125,7 +136,7 @@ func NewConfig() *Config {
 		lti.Ab = c.LiebianDetail.Ab[i]
 		c.LiebianDetailMap[lti.LiebianType] = lti
 	}
-	
+
 	fmt.Println(c)
 
 	return c
