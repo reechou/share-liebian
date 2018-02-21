@@ -310,7 +310,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		token, err := self.wxOauth2Client[appIdx].ExchangeToken(code)
 		if err != nil {
-			http.Redirect(w, r, fmt.Sprintf("%s%s%s", scheme, r.Host, r.URL.Path), http.StatusFound)
+			http.Redirect(w, r, fmt.Sprintf("%s%s%s?app=%d", scheme, r.Host, r.URL.Path, appIdx), http.StatusFound)
 			return
 		}
 		lbType, err := strconv.Atoi(params[1])
@@ -340,6 +340,7 @@ func (self *LeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
+		holmes.Debug("appidx: %d lbtype: %d qrcode: %s", appIdx, lbType, urlRsp.Qrcode)
 		// --- new logic end
 		if lbInfo, ok := self.l.cfg.LiebianDetailMap[lbType]; ok {
 			renderView(w, "./views/share_detail.html", map[string]interface{}{
